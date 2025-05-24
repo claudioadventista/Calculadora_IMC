@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC</title>
+    <style>
+        .tab{
+            font-family: 'Trebuchet MS', sans-serif;
+            width: 300px;
+            margin: 5px auto;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #container{
+            padding: 5px 20px 15px 20px;
+        }
+        #tabela{
+            padding: 5px 20px 15px 20px;
+            display:none;
+        }
+        #tabCredito{
+            padding: 5px 20px 15px 20px;
+            display:none;
+        }
+        #relatorio{
+            padding: 5px 20px 15px 20px;
+            display: none;
+        }
+        #tabHistorico{
+            width:86%;
+            height:219px;
+            background-color:#eee7be;
+            border:1px solid #ccc;
+            padding:20px;
+            overflow: auto;
+            margin-bottom: 4px;
+            font-size: 0.8em;
+        }
+        label{
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        input[type="text"]{
+            width: 84%;
+            height: 25px;
+            margin-bottom: 10px;
+            right: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            float:left;
+        }
+        table,td{
+            border-color: #fff;
+            padding:0;
+        }
+        table{
+            width: 100%;
+        }
+        td{
+            width: 50%;   
+        }
+        .botao{
+            color: #fff;
+            height:35px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width:48%;
+            padding:0;
+            margin-top:2px;
+        }
+        #calcular{
+            background-color: #4caf50;
+            border:1px solid #3e8341;
+            width: 100%;
+        }
+        #calcular:hover{
+            background-color:  #3e8341;
+        }
+        .novoCadastro{
+            background-color: #755;
+            border:1px solid #000;  
+        }
+        .novoCadastro:hover{
+            background-color:  rgb(85, 61, 61);
+        }
+        .botaoInferior{
+            background-color: #3e84ee;
+            border:1px solid #2220b6;  
+        }
+        .botaoInferior:hover{
+            background-color: #2220b6;
+        }
+        .fechar{
+            background-color: #f13131;
+            float:right;
+            border:1px solid #991b0a;
+        }
+        .fechar:hover{
+            background-color:  #991b0a;
+        }
+        #resultado{
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #d5dee6; 
+            border:1px solid #7db2e0; 
+            border-radius: 5px;
+            padding: 15px 0px 15px 0px;
+            display: none;
+        }
+        h2, h1{
+            background-color: #eee; 
+        }
+        .magrezaGrauIII, .obesidadeGrauII{ 
+           background-color:#ccc; 
+           border:1px solid #aaa;
+        }
+        .magrezaGrauII,.obesidadeGrauI{ 
+           background-color:#ddd; 
+           border:1px solid #bbb;
+        }
+        .magrezaGrauI,.sobrepeso{ 
+           background-color:#eee;
+           border:1px solid #ccc; 
+        }
+        .normal{
+           border:1px solid #ddd;
+        }    
+        .obesidadeGrauIII{
+          background-color:#bbb; 
+          border:1px solid #999;
+        }
+        .tabelaIMC{
+            padding:5px;
+            border-radius: 5px;
+            margin: 5px 0 5px 0;
+        }
+        .labelPeso, .labelAltura{
+            color:#ad0303;
+        }
+      .imagem{
+            position:relative;
+            float:left;
+            margin-top:-60px; 
+        }
+       img{
+            width:70px;
+            height:50px;   
+            background-color: #eee;
+            border:none;  
+        }
+        a{
+            text-decoration: none;
+            color:#000;
+        }
+        .tabelaCredito{
+            width: 98%;
+            border-radius: 5px;
+            padding:5px 0 5px 5px;
+            margin:5px 0;
+        }
+        .link{
+            background-color: #eee; 
+            border:1px solid #ccc;    
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="tab">
+        <center><h1>Calculadora de IMC</h1></center>
+        <center><h2>Cl&aacuteudio Brito</h2></center>
+            <div id="imagem" style="display:none;" > 
+                <a href="https://youtube.com/@cteclaudiobritocaruaru-pe9889?si=JanZY_EJXQixKK3C" target="_blank"><img class="imagem" src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg" /></a>
+            </div>
+        <form>
+            <table>
+                <tr>
+                    <td>
+                        <label for="peso" class="labelPeso">Peso max. 250</label>
+                        <input type="text" id="peso" placeholder="Digite aqui o peso" maxlength="4" inputmode="numeric" required 
+                        oninput="pesoOnInput(this.value)" 
+                        onkeypress="soUmaVirgula(this.value)" 
+                        onclick="limpaResultado();this.value = '';">
+                    </td>
+                    <td>
+                        <label for="altura" class="labelAltura">Altura max. 2,99</label>
+                        <input type="text" id="altura" placeholder="Digite aqui a altura" inputmode="numeric" maxlength="4" required 
+                            oninput="primeiroCaracter(this.value);" 
+                            onkeypress="soUmaVirgulaAltura(this.value)"
+                            onclick="limpaResultado();this.value = '';" >
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" maxlength="50" placeholder="Digite aqui o nome" 
+                            oninput="formataNome(this.value)";
+                            onclick="this.value = '';">
+                            
+                    </td>
+                    <td>
+                        <label for="peso">Idade max. 130</label>
+                        <input type="text" id="idade" max="3" inputmode="numeric" maxlength="3" placeholder="Digite aqui a idade" 
+                        oninput="idadeOnInput(this.value)"  
+                        onclick="this.value = '';" > 
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button id="calcular" class="botao" >Calcular IMC</button> 
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <table>
+            <tr>
+                <td>
+                    <button  class="botao novoCadastro" onclick="limpaConsulta()" >Limpar</button>
+                    <button class="botao botaoInferior" onclick="mostraHistorico()">Hist&oacuterico</button>
+                </td>
+                <td>
+                    <button class="botao botaoInferior" onclick="tabCredito()">Cr&eacuteditos</button>
+                    <button class="botao botaoInferior" onclick="mostrar()">Tabela</button>
+                </td>
+            </tr>
+        </table>
+        <center><div id="resultado"></div></center>
+    </div>
+    <div id="tabela" class="tab">
+        <center><h1>Tabela de IMC</h1></center>
+        <p class="tabelaIMC magrezaGrauIII">Abaixo de 15,9 Magreza grau III</p>
+        <p class="tabelaIMC magrezaGrauII">Entre 16 e 16,9 Magreza grau II</p>
+        <p class="tabelaIMC magrezaGrauI">Entre 17 e 18.4 Magreza grau I</p>
+        <p class="tabelaIMC normal">Entre 18.5 e 24,9 Normal</p>
+        <p class="tabelaIMC sobrepeso">Entre 25 e 29,9 Sobrepeso</p>
+        <p class="tabelaIMC obesidadeGrauI">Entre 30 e 34,9 Obesidade grau I</p>
+        <p class="tabelaIMC obesidadeGrauII">Entre 35 e 40 Obesidade grau II</p>
+        <p class="tabelaIMC obesidadeGrauIII">Acima de 40 Obesidade grau III</p>
+        <table>
+            <tr>
+                <td></td>
+                <td>
+                    <button class="botao fechar" onclick="fechar()">Fechar</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="tabCredito" class="tab">
+        <center><h1>Créditos</h1></center>
+        <p class="tabelaCredito">Criado em maio/2025 por Cl&aacuteudio Brito</p>
+        <p class="tabelaCredito">Contato - Whatsapp (81) 9 9924-6724</p>
+        <p class="tabelaCredito">Clique abaixo, e siga-me redes sociais</p>
+        <p class="tabelaCredito link"><a href="https://threads.net/@xavier.brito" target="_blank">Threads - Xavier Brito</a></p>
+        <p class="tabelaCredito link"><a href="https://www.instagram.com/xavier.brito/" target="_blank">Instagram - Xavier Brito</a></p>
+        <p class="tabelaCredito link"></a><a href="https://m.facebook.com/claudio.xavier.37669/" target="_blank">Facebook - Cl&aacuteudio Brito</a></p>
+        <p class="tabelaCredito link"><a href="https://youtube.com/@cteclaudiobritocaruaru-pe9889?si=JanZY_EJXQixKK3C" target="_blank">Youtube - CTE Cl&aacuteudio Brito</a></p>
+        <p class="tabelaCredito link"><a href="https://www.instagram.com/oficina.c.t.eletronica/" target="_blank">Instagram - Oficina C.T.Eletr&ocircnica</a></p>   
+        <table>
+            <tr>
+                <td></td>
+                <td>
+                    <button class="botao fechar" onclick="fechar()">Fechar</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="relatorio"class="tab">
+        <center><h1>Hist&oacuterico</h1></center>
+        <div id="tabHistorico"></div>
+        <table>
+            <tr>
+                <td>
+                    <button class="botao novoCadastro" onclick="limparHistorico()" >Limpar </button>
+                </td>
+                <td>
+                    <button class="botao fechar" onclick="fechar()">Fechar</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        const botaoCalcular = document.getElementById("calcular");
+        const resultado = document.getElementById("resultado");
+
+        // variaveis usadas 
+        let dataAtual = new Date().toLocaleString();
+
+        // essa funcao e chamada pelos campos peso, altura e pelo botao limpar
+        function limpaResultado(){
+            document.getElementById('resultado').innerText = '';
+            document.getElementById('resultado').style.display='none';
+        }
+       
+        /******************************************************************* /
+        /                                                                    /
+        /                                                                    /
+        /     ********** INICIO DO PROCESSO DO CAMPO PESO *************      /
+        /                                                                    /
+        /                                                                    /
+        /***  campo peso, evento onkeypress, so aceita uma virgula no campo */
+        function soUmaVirgula(virgula){
+            var input = document.getElementById('peso');
+
+            // limita a apenas uma virgula no campo
+            input.addEventListener('input', function(event){
+                var v =  this.value;
+                var m = v.match(/,/g);
+                if(m && m.length >1){
+                    this.value = v.substring(0, v.indexOf(',')+1)
+                    + v.substring(v.indexOf(',')+1).replace(/,/g,'');
+                }
+            });
+        }
+
+        // campo peso, evento oninput, funcao que limita o valor do campo peso, e nao permite comecar com espaco ou com zero
+        function pesoOnInput(peso){
+
+            // so numeros e virgula no campo
+            document.getElementById('peso').value = peso.replace(/[^0-9,]/g,'').replace(/(\..*?)\..*/g,'$1');
+            
+            // max 250
+            if(peso>250){
+                document.getElementById('peso').value = '';
+            };
+            
+            // embora aceite ponto e virgula, não permite iniciar com zero nem com virgula
+            if(peso.substr(0) === '0' || peso.substr(0) === ','){
+                document.getElementById("peso").value = '';
+            };
+        }; // ************** FIM DO PROCESSO DO CAMPO PESO ****************
+
+        /******************************************************************* /
+        /                                                                    /
+        /                                                                    /
+        /     ********** INICIO DO PROCESSO DO CAMPO ALTURA *************    /
+        /                                                                    /
+        /                                                                    /
+        / campo altura, evento oninput, funcao que impede iniciar            /
+        / a altura com valor acima de 2,99 metros  **************************/
+        function primeiroCaracter(altura){
+
+            // so numero e virgula no campo altura
+            document.getElementById('altura').value = altura.replace(/[^0-9,]/g,'').replace(/(\..*?)\..*/g,'$1');
+          
+            // so aceita iniciar com 1 ou 2
+            if(altura.substr(0) === ',' || altura.substr(0) === '3' || altura.substr(0) ==='4' || altura.substr(0) ==='5' || altura.substr(0) ==='6' || altura.substr(0) ==='7' || altura.substr(0) ==='8' || altura.substr(0) ==='9'){
+                document.getElementById("altura").value = '';
+            }
+
+             // max 2,99
+             if(altura>2.99){
+                document.getElementById('altura').value = '';
+            };
+        }
+
+        // campo altura, evento onkeypress, so aceita uma virgula no campo
+        function soUmaVirgulaAltura(virgula){
+            var input = document.getElementById('altura');
+
+            // limita a apenas uma virgula no campo
+            input.addEventListener('input', function(event){
+                var v =  this.value;
+                var m = v.match(/,/g);
+                if(m && m.length >1){
+                    this.value = v.substring(0, v.indexOf(',')+1)
+                    + v.substring(v.indexOf(',')+1).replace(/,/g,'');
+                }
+            });
+        } // ************** FIM DO PROCESSO DO CAMPO ALTURA ****************
+
+        /******************************************************************* /
+        /                                                                    /
+        /                                                                    /
+        /     ********* INICIO DO PROCESSO DO CAMPO NOME *************       /
+        /                                                                    /
+        /                                                                    /
+        /*** campo idade, evento oninput ************************************/
+
+        function formataNome(nome){ 
+            // transforma as letras em maiuscula, retira os acentos, e so aceita um espacos entre as palavras
+            document.getElementById('nome').value = nome.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+
+            // impede iniciar com espacos
+            if(nome.startsWith(' ')){
+                document.getElementById('nome').value = '';
+            };
+        } // ************** FIM DO PROCESSO DO CAMPO NOME ****************
+
+        /******************************************************************* /
+        /                                                                    /
+        /                                                                    /
+        /     ******** INICIO DO PROCESSO DO CAMPO IDADE *************       /
+        /                                                                    /
+        /                                                                    /
+        /*** campo idade, evento oninput ************************************/
+        function idadeOnInput(idade){
+
+             // so numeros no campo
+             document.getElementById('idade').value = idade.replace(/[^0-9]/g,'').replace(/(\..*?)\..*/g,'$1');
+            
+            // max 250
+            if(idade>130){
+                document.getElementById('idade').value = '';
+            };
+            
+            // acrescenta uma virgula se digitar zero
+            if(idade.startsWith('0')){
+               var input = document.getElementById('idade');
+
+                // limita a apenas uma virgula no campo
+                input.addEventListener('input', function(event){
+                    var v =  this.value;
+                    var m = v.match(/,/g);
+                    if(m && m.length >1){
+                        this.value = v.substring(0, v.indexOf(',')+1)
+                        + v.substring(v.indexOf(',')+1).replace(/,/g,'');
+                    }
+                });
+                
+                document.getElementById("idade").value = '0,'+ idade.substr(2);
+
+            }
+        } // ************** FIM DO PROCESSO DO CAMPO IDADE ****************
+
+        /******************************************************************* /
+        /                                                                    /
+        /                                                                    /
+        /    INICIO DO PROCESSO DO CALCULAR O IMC E SALVAR AS INFORMACOES    /
+        /                                                                    /
+        /                                                                    /
+        /*** funcao que calcula o IMC calculando o peso e a altura  *********/
+        botaoCalcular.addEventListener("click", (e) =>{
+            e.preventDefault();
+            const peso2 = document.getElementById("peso");
+            const altura2 = document.getElementById("altura");
+            const nome = document.getElementById("nome").value;
+            const idade = document.getElementById("idade").value;
+            let arrayHistorico = [];
+
+                if(peso2.value !== '' && altura2.value !== ''){
+                    //                                                            troca a virgula pelo ponto
+                    const peso = parseFloat(document.getElementById("peso").value.replace(",","."));
+                    //                                                                troca a virgula pelo ponto
+                    const altura = parseFloat(document.getElementById("altura").value.replace(",","."));
+                    // caucula o IMC 
+                    const imc = peso / (altura * altura);
+                    
+                    // se o campo peso e altura estiverem preenchidos, mostra o resultado
+                    if(peso2.value.length>=1 && altura2.value.length>=1){
+                        // mostra a div do resultado
+                        document.getElementById("resultado").style.display="block";
+                        const classificacao = classificarIMC(imc);
+                        resultado.innerText = `IMC: ${imc.toFixed(2)} - ${classificacao}`;
+                        
+                       
+
+                        // salva o resultado
+                        if(localStorage.myHistory){
+
+                            // caso o local exista, pega as informacoes contida e coloca no array que foi criado
+                            arrayHistorico = JSON.parse(localStorage.getItem('myHistory'));
+                        };
+
+                        // com as informacoes coletadas do local storage, agora acrescenta as informacoes dos campos no array
+                        arrayHistorico.push('<center style="color:brown;background-color:white;padding:5px 5px 5px 5px; border-radius:5px;">--- NOVO HIST&OacuteRICO ---</center>');
+                        arrayHistorico.push('Nome : ' + nome);
+                        arrayHistorico.push('Idade : ' + idade);
+                        arrayHistorico.push('Peso : ' + peso);
+                        arrayHistorico.push('Altura : ' + altura );
+                        arrayHistorico.push('IMC : ' + imc.toFixed(2));
+                        arrayHistorico.push(classificacao);
+                        arrayHistorico.push('Data : ' + dataAtual) ;
+
+                        // salva tudo como uma unica informacao, substituindo as informacoes antigas no local especifico
+                        localStorage.myHistory = JSON.stringify(arrayHistorico); 
+
+                    }else{
+                    // se o campo peso ou altura estiverem em branco   
+                        alert("Campos em vermelho em branco"); 
+                       // resultado.innerText = 'Preencha os campos em vermelho';
+                    }
+            }else{
+                alert("Campos em vermelho em branco");
+            }
+        });// ************** FIM DO PROCESSO DO CALCULO DO IMC ****************
+
+        /************************************************************************** /
+        /                                                                           /
+        /                                                                           /
+        /     ***** INICIO DO PROCESSO DE CLASSIFICACAO DO RESULTADO DO IMC *****   /
+        /                                                                           /
+        /                                                                           /                                                          
+        / funcao que classifica o estado de saude de acordo com o IMC encontrado   */
+        function classificarIMC(imc){
+            if(imc < 16){
+                return "Magreza grau III";
+            }else if(imc >= 16 && imc < 17){
+                return "Magreza grau II";
+            }else if(imc >=17 && imc < 18.5){
+                return "Magreza grau I";
+            }else if(imc >= 18.5 && imc < 25){
+                return "Normal";
+            }else if(imc >= 25 && imc < 30){
+                return "Sobrepeso";
+            }else if(imc >= 30 && imc < 35){
+                return "Obesidade Gral I";
+            }else if(imc >= 35 && imc < 40){
+                return "Obesidade Gral II";
+            }else{
+                return "Obesidade Gral III";
+            } 
+        }// ***** FIM DO PROCESSO DE CLASSIFICACAO DO RESULTADO DO IMC *****
+
+        /************************************************************************** /
+        /                                                                           /
+        /                                                                           /
+        /     ************ INICIO DA FUNCAO DE LIMPARA ACONSULTA ****************   /
+        /                                                                           /
+        /                                                                           /
+        /*****      funcao que limpa a consulta ************************************/ 
+        function limpaConsulta(){
+            if(confirm ("Deseja limpar tudo?")){
+
+                // limpa todos os campos input
+                const inputs = document.querySelectorAll('input');
+
+                // faz uma varredura em todos os inputs
+                inputs.forEach(input => {
+
+                    // atribui o valor branco para cada um deles
+                    input.value = '';
+                })
+
+                // chama a funcao que limpa o resultado
+                limpaResultado();
+            }else{
+                return false;
+            }
+        }// ***** FIM DA FUNCAO DE LIMPAR A CONSULTA **********************
+
+        /************************************************************************** /
+        /                                                                           /
+        /                                                                           /
+        /     ************** INICIO DA FUNCAO MOSTRAR HISTORICO ****************    /
+        /                                                                           /
+        /                                                                           /
+        /***************************************************************************/ 
+
+        function mostraHistorico(){
+        document.getElementById("container").style.display="none";
+        document.getElementById("relatorio").style.display="block";
+            // se houver informacao no local especifico do local storage, mostra a informacao
+            if(localStorage.myHistory !==''){
+
+                // cria uma variavel para mostrar o conteudo do local storage numa div
+                let resultDIV = document.getElementById('tabHistorico');
+
+                // se houver um local especifico no local storage, coleta as informacoes
+                if(localStorage.myHistory){ 
+
+                    // apaga as informacoes na div onde vai mostrar as informacoes atualizadas
+                    resultDIV.innerHTML = "";    
+                    
+                    // pega as informacoes do local storage e coloca no array
+                    arrayHistorico = JSON.parse(localStorage.getItem('myHistory'));   
+
+                    // cria uma lista e coloca na variavel que vai mostrar as informacoes na div 
+                    for(var i in arrayHistorico){
+                        let p = document.createElement("p");
+                        p.innerHTML = arrayHistorico[i];
+                        resultDIV.append(p);
+                    }  
+                } 
+            }else{
+
+                // se não houver informacao, mostra a mensgem
+                alert('Nenhuma informação gravada');
+
+                // chama a funcao fechar 
+                fechar();
+            }           
+        };// ***** FIM DA FUNCAO DE MOSTRAR HISTORICO *************************
+
+        /************************************************************************** /
+        /                                                                           /
+        /                                                                           /
+        /     ************** INICIO DA FUNCAO LIMPAR HISTORICO *****************    /
+        /                                                                           /
+        /                                                                           /
+        /***************************************************************************/ 
+        function limparHistorico(){
+            if(confirm ("Deseja limpar o histórico?")){
+
+            // se for confirmada, apaga todas as informacoes no local especifico no local storage
+            localStorage.myHistory = "";
+
+            // refresh na pagina
+            location.reload();
+            }else{
+                return false;
+            }
+        }// ***** FIM DA FUNCAO DE LIMPAR A HISTORICO **********************
+      
+        /************************************************************************** /
+        /                                                                           /
+        /                                                                           /
+        /     ***************** INICIO DAS FUNCOES MENORES *********************    /
+        /                                                                           /
+        /                                                                           /
+        /*****   funcao do botao mostrar tabela  ***********************************/ 
+         function mostrar(){
+            document.getElementById("tabela").style.display="block";
+            document.getElementById("container").style.display="none"; 
+        }
+        // funcao do botao mostrar credito
+        function tabCredito(){
+            document.getElementById("tabCredito").style.display="block";
+            document.getElementById("container").style.display="none";
+        }
+        // funcao do botao mostrar historico
+        function mostrarHistorico(){
+            document.getElementById("container").style.display="none";
+            document.getElementById("relatorio").style.display="block";
+        }
+        // funcao do botao fechar
+        function fechar(){
+            document.getElementById("tabela").style.display="none";
+            document.getElementById("tabCredito").style.display="none";
+            document.getElementById("relatorio").style.display="none";
+            document.getElementById("container").style.display="block";  
+        }
+
+        /************************************************************************** /
+        /                                                                           /
+        /                                                                           /
+        /     ******* INICIO DO PROCEDIMENTO PARA MOSTRAR A IMAGEM *************    /
+        /                                                                           /
+        /                                                                           /
+        /***************************************************************************/ 
+        var image = document.createElement('img');
+        image.src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg";
+        // mostra a div da imagem se estiver conectado a internet
+        image.onload = function(){
+            document.getElementById("imagem").style.display = "block";
+        }
+        // esconde a div da imagem se não estiver conectado a internet
+        image.onerror = function(){
+            document.getElementById("imagem").style.display = "none";
+        }// ***** FIM DO PROCEDIMENTO PARA MOSTRAR A IMAGEM **********************
+    </script>
+</body>
+</html>
