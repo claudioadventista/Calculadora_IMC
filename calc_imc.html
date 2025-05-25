@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -12,20 +13,15 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #container{
             padding: 5px 20px 15px 20px;
         }
         #tabela{
-            padding: 5px 20px 15px 20px;
             display:none;
         }
         #tabCredito{
-            padding: 5px 20px 15px 20px;
             display:none;
         }
         #relatorio{
-            padding: 5px 20px 15px 20px;
             display: none;
         }
         #tabHistorico{
@@ -183,14 +179,13 @@
                         <label for="peso" class="labelPeso">Peso max. 250</label>
                         <input type="text" id="peso" placeholder="Digite aqui o peso" maxlength="4" inputmode="numeric" required 
                         oninput="pesoOnInput(this.value)" 
-                        onkeypress="soUmaVirgula(this.value)" 
                         onclick="limpaResultado();this.value = '';">
                     </td>
                     <td>
                         <label for="altura" class="labelAltura">Altura max. 2,99</label>
                         <input type="text" id="altura" placeholder="Digite aqui a altura" inputmode="numeric" maxlength="4" required 
                             oninput="primeiroCaracter(this.value);" 
-                            onkeypress="soUmaVirgulaAltura(this.value)"
+                            onkeyup="filtraAlturaMaxima(this.value);"
                             onclick="limpaResultado();this.value = '';" >
                     </td>
                 </tr>
@@ -286,9 +281,6 @@
         const botaoCalcular = document.getElementById("calcular");
         const resultado = document.getElementById("resultado");
 
-        // variaveis usadas 
-        let dataAtual = new Date().toLocaleString();
-
         // essa funcao e chamada pelos campos peso, altura e pelo botao limpar
         function limpaResultado(){
             document.getElementById('resultado').innerText = '';
@@ -301,25 +293,14 @@
         /     ********** INICIO DO PROCESSO DO CAMPO PESO *************      /
         /                                                                    /
         /                                                                    /
-        /***  campo peso, evento onkeypress, so aceita uma virgula no campo */
-        function soUmaVirgula(virgula){
-            var input = document.getElementById('peso');
-
-            // limita a apenas uma virgula no campo
-            input.addEventListener('input', function(event){
-                var v =  this.value;
-                var m = v.match(/,/g);
-                if(m && m.length >1){
-                    this.value = v.substring(0, v.indexOf(',')+1)
-                    + v.substring(v.indexOf(',')+1).replace(/,/g,'');
-                }
-            });
-        }
-
-        // campo peso, evento oninput, funcao que limita o valor do campo peso, e nao permite comecar com espaco ou com zero
+        / campo peso, evento oninput, funcao que so aceita uma virgula no campo, 
+        / limita o valor do campo peso, e nao permite comecar com espaco ou com zero */
         function pesoOnInput(peso){
-
-            // so numeros e virgula no campo
+            
+            // pega o campo pelo id, sem o valor para usar embaixo
+            let inputPeso = document.getElementById('peso');
+            
+            // so numeros e virgula no campo, trabalha com o valor
             document.getElementById('peso').value = peso.replace(/[^0-9,]/g,'').replace(/(\..*?)\..*/g,'$1');
             
             // max 250
@@ -331,6 +312,17 @@
             if(peso.substr(0) === '0' || peso.substr(0) === ','){
                 document.getElementById("peso").value = '';
             };
+
+            // limita a apenas uma virgula no campo
+            inputPeso.addEventListener('input', function(event){
+                let v =  this.value;
+                let m = v.match(/,/g);
+                if(m && m.length >1){
+                    this.value = v.substring(0, v.indexOf(',')+1)
+                    + v.substring(v.indexOf(',')+1).replace(/,/g,'');
+                }
+            });
+
         }; // ************** FIM DO PROCESSO DO CAMPO PESO ****************
 
         /******************************************************************* /
@@ -339,38 +331,37 @@
         /     ********** INICIO DO PROCESSO DO CAMPO ALTURA *************    /
         /                                                                    /
         /                                                                    /
-        / campo altura, evento oninput, funcao que impede iniciar            /
-        / a altura com valor acima de 2,99 metros  **************************/
-        function primeiroCaracter(altura){
-
-            // so numero e virgula no campo altura
-            document.getElementById('altura').value = altura.replace(/[^0-9,]/g,'').replace(/(\..*?)\..*/g,'$1');
-          
-            // so aceita iniciar com 1 ou 2
-            if(altura.substr(0) === ',' || altura.substr(0) === '3' || altura.substr(0) ==='4' || altura.substr(0) ==='5' || altura.substr(0) ==='6' || altura.substr(0) ==='7' || altura.substr(0) ==='8' || altura.substr(0) ==='9'){
-                document.getElementById("altura").value = '';
+        / campo altura, evento onkeyup, funcao que impede inicia a           /
+        / a altura com valor acima de 2  ************************************/
+        function filtraAlturaMaxima(alt){
+            if(alt.startsWith(3) || alt.startsWith(4) || alt.startsWith(5) || alt.startsWith(6) || alt.startsWith(7) || alt.startsWith(8) || alt.startsWith(9)){
+                document.getElementById("altura").value = ''; 
             }
-
-             // max 2,99
-             if(altura>2.99){
-                document.getElementById('altura').value = '';
-            };
         }
 
-        // campo altura, evento onkeypress, so aceita uma virgula no campo
-        function soUmaVirgulaAltura(virgula){
-            var input = document.getElementById('altura');
+        // campo altura, evento oninput
+        function primeiroCaracter(altura){
+            let inputAltura = document.getElementById('altura');
 
-            // limita a apenas uma virgula no campo
-            input.addEventListener('input', function(event){
-                var v =  this.value;
-                var m = v.match(/,/g);
+           // filtra todos os caracteres, permitindo apenas numero no campo altura
+            altura = altura.replace(/[^0-9]/g,'').replace(/(\..*?)\..*/g,'$1');
+
+            // coloca uma virgula apos ser digitado o segundo numero
+            altura = altura.replace(/\B(?=(\d{1})+(?!\d))/g, ",");
+
+            // atribui os valores modificados ao campo
+            document.getElementById("altura").value = altura;
+           
+             // limita a apenas uma virgula no campo
+             inputAltura.addEventListener('input', function(event){
+                let v =  this.value;
+                let m = v.match(/,/g);
                 if(m && m.length >1){
                     this.value = v.substring(0, v.indexOf(',')+1)
                     + v.substring(v.indexOf(',')+1).replace(/,/g,'');
                 }
             });
-        } // ************** FIM DO PROCESSO DO CAMPO ALTURA ****************
+        }// ************** FIM DO PROCESSO DO CAMPO ALTURA ****************
 
         /******************************************************************* /
         /                                                                    /
@@ -381,13 +372,21 @@
         /*** campo idade, evento oninput ************************************/
 
         function formataNome(nome){ 
+
+            // filtro que permite digitar apenas letras e espacos
+            nome = nome.replace(/[^a-zA-Z ]/g,'');
+
             // transforma as letras em maiuscula, retira os acentos, e so aceita um espacos entre as palavras
-            document.getElementById('nome').value = nome.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+           nome = nome.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+
+           // atribui os valores modificados ao campo
+           document.getElementById('nome').value = nome;
 
             // impede iniciar com espacos
             if(nome.startsWith(' ')){
                 document.getElementById('nome').value = '';
             };
+            
         } // ************** FIM DO PROCESSO DO CAMPO NOME ****************
 
         /******************************************************************* /
@@ -402,28 +401,27 @@
              // so numeros no campo
              document.getElementById('idade').value = idade.replace(/[^0-9]/g,'').replace(/(\..*?)\..*/g,'$1');
             
-            // max 250
+            // idade maxima 130 anos 
             if(idade>130){
                 document.getElementById('idade').value = '';
             };
             
-            // acrescenta uma virgula se digitar zero
-            if(idade.startsWith('0')){
-               var input = document.getElementById('idade');
+            let input = document.getElementById('idade');
 
                 // limita a apenas uma virgula no campo
                 input.addEventListener('input', function(event){
-                    var v =  this.value;
-                    var m = v.match(/,/g);
+                    let v =  this.value;
+                    let m = v.match(/,/g);
                     if(m && m.length >1){
                         this.value = v.substring(0, v.indexOf(',')+1)
                         + v.substring(v.indexOf(',')+1).replace(/,/g,'');
                     }
                 });
-                
-                document.getElementById("idade").value = '0,'+ idade.substr(2);
 
-            }
+                 // acrescenta uma virgula se digitar zero
+                if(idade.startsWith('0')){
+                    document.getElementById("idade").value = '0,'+ idade.substr(2);
+                }
         } // ************** FIM DO PROCESSO DO CAMPO IDADE ****************
 
         /******************************************************************* /
@@ -439,26 +437,41 @@
             const altura2 = document.getElementById("altura");
             const nome = document.getElementById("nome").value;
             const idade = document.getElementById("idade").value;
+
+            // pega a data atual numa variavel
+            let dataAtual = new Date().toLocaleString();
+
+            // array que vai coletar as informacoes salvas e as novas
             let arrayHistorico = [];
 
+                // se houver valor nos campos peso e altura, entra aqui 
                 if(peso2.value !== '' && altura2.value !== ''){
-                    //                                                            troca a virgula pelo ponto
+                    
+                    //  permite um valor flutuante no campo peso e troca a virgula pelo ponto
                     const peso = parseFloat(document.getElementById("peso").value.replace(",","."));
-                    //                                                                troca a virgula pelo ponto
+                    
+                    //  permite um valor flutuante no campo altura e troca a virgula pelo ponto
                     const altura = parseFloat(document.getElementById("altura").value.replace(",","."));
+                    
                     // caucula o IMC 
                     const imc = peso / (altura * altura);
+
                     
-                    // se o campo peso e altura estiverem preenchidos, mostra o resultado
+                    // se o campo peso e altura estiverem preenchidos, mostra o resultado, segunda validacao
                     if(peso2.value.length>=1 && altura2.value.length>=1){
+                        
                         // mostra a div do resultado
                         document.getElementById("resultado").style.display="block";
-                        const classificacao = classificarIMC(imc);
-                        resultado.innerText = `IMC: ${imc.toFixed(2)} - ${classificacao}`;
-                        
-                       
 
-                        // salva o resultado
+                      //  imc.replace(".",",");
+
+                        // puxa a classificacao de acordo com o resultado do imc
+                        const classificacao = classificarIMC(imc);
+
+                        // mostra o resultado na div
+                        resultado.innerText = `IMC: ${imc.toFixed(2).replace(".",",")} - ${classificacao}`;
+
+                        // busca encontrar o local expecifico onde vai salvar as informacoes
                         if(localStorage.myHistory){
 
                             // caso o local exista, pega as informacoes contida e coloca no array que foi criado
@@ -469,9 +482,11 @@
                         arrayHistorico.push('<center style="color:brown;background-color:white;padding:5px 5px 5px 5px; border-radius:5px;">--- NOVO HIST&OacuteRICO ---</center>');
                         arrayHistorico.push('Nome : ' + nome);
                         arrayHistorico.push('Idade : ' + idade);
-                        arrayHistorico.push('Peso : ' + peso);
-                        arrayHistorico.push('Altura : ' + altura );
-                        arrayHistorico.push('IMC : ' + imc.toFixed(2));
+                        arrayHistorico.push('Peso : ' + peso.toFixed(1).replace(".",","));
+                        arrayHistorico.push('Altura : ' + altura.toFixed(2).replace(".",","));
+                        
+                        // mostra apenas as duas casas decimais do resultado
+                        arrayHistorico.push('IMC : ' + imc.toFixed(2).replace(".",","));
                         arrayHistorico.push(classificacao);
                         arrayHistorico.push('Data : ' + dataAtual) ;
 
@@ -480,11 +495,11 @@
 
                     }else{
                     // se o campo peso ou altura estiverem em branco   
-                        alert("Campos em vermelho em branco"); 
+                        alert("Campo em vermelho em branco"); 
                        // resultado.innerText = 'Preencha os campos em vermelho';
                     }
             }else{
-                alert("Campos em vermelho em branco");
+                alert("Campo em vermelho em branco");
             }
         });// ************** FIM DO PROCESSO DO CALCULO DO IMC ****************
 
@@ -521,7 +536,7 @@
         /     ************ INICIO DA FUNCAO DE LIMPARA ACONSULTA ****************   /
         /                                                                           /
         /                                                                           /
-        /*****      funcao que limpa a consulta ************************************/ 
+        /*****  funcao que limpa a consulta nos campos *****************************/ 
         function limpaConsulta(){
             if(confirm ("Deseja limpar tudo?")){
 
@@ -538,6 +553,8 @@
                 // chama a funcao que limpa o resultado
                 limpaResultado();
             }else{
+
+                 // se nao for confirmada, retorna sem limpar os campos
                 return false;
             }
         }// ***** FIM DA FUNCAO DE LIMPAR A CONSULTA **********************
@@ -548,19 +565,20 @@
         /     ************** INICIO DA FUNCAO MOSTRAR HISTORICO ****************    /
         /                                                                           /
         /                                                                           /
-        /***************************************************************************/ 
+        /*** funcao que mostra o historico *****************************************/ 
 
         function mostraHistorico(){
         document.getElementById("container").style.display="none";
         document.getElementById("relatorio").style.display="block";
-            // se houver informacao no local especifico do local storage, mostra a informacao
+
+            // se houver informacao no local especifico do local storage, entra aqui
             if(localStorage.myHistory !==''){
 
                 // cria uma variavel para mostrar o conteudo do local storage numa div
                 let resultDIV = document.getElementById('tabHistorico');
 
-                // se houver um local especifico no local storage, coleta as informacoes
-                if(localStorage.myHistory){ 
+                // se houver um local especifico no local storage, coleta as informacoes, segunda validacao
+                if(localStorage.myHistory){
 
                     // apaga as informacoes na div onde vai mostrar as informacoes atualizadas
                     resultDIV.innerHTML = "";    
@@ -568,8 +586,8 @@
                     // pega as informacoes do local storage e coloca no array
                     arrayHistorico = JSON.parse(localStorage.getItem('myHistory'));   
 
-                    // cria uma lista e coloca na variavel que vai mostrar as informacoes na div 
-                    for(var i in arrayHistorico){
+                    // com um loop for, cria uma lista e coloca na variavel que vai mostrar as informacoes na div 
+                    for(let i in arrayHistorico){
                         let p = document.createElement("p");
                         p.innerHTML = arrayHistorico[i];
                         resultDIV.append(p);
@@ -591,7 +609,7 @@
         /     ************** INICIO DA FUNCAO LIMPAR HISTORICO *****************    /
         /                                                                           /
         /                                                                           /
-        /***************************************************************************/ 
+        /*** limpa o historico no local storage ************************************/ 
         function limparHistorico(){
             if(confirm ("Deseja limpar o histórico?")){
 
@@ -601,6 +619,8 @@
             // refresh na pagina
             location.reload();
             }else{
+
+                // se nao for confirmada, retorna sem apagar o historico
                 return false;
             }
         }// ***** FIM DA FUNCAO DE LIMPAR A HISTORICO **********************
@@ -641,7 +661,7 @@
         /                                                                           /
         /                                                                           /
         /***************************************************************************/ 
-        var image = document.createElement('img');
+        let image = document.createElement('img');
         image.src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg";
         // mostra a div da imagem se estiver conectado a internet
         image.onload = function(){
