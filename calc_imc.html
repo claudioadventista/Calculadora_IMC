@@ -21,7 +21,7 @@
         #tabCredito{
             display:none;
         }
-        #relatorio{
+        #historico{
             display: none;
         }
         #tabHistorico{
@@ -166,7 +166,7 @@
     </style>
 </head>
 <body>
-    <div id="container" class="tab">
+    <div id="formulario" class="tab">
         <center><h1>Calculadora de IMC</h1></center>
         <center><h2>Cl&aacuteudio Brito</h2></center>
             <div id="imagem" style="display:none;" > 
@@ -178,14 +178,14 @@
                     <td>
                         <label for="peso" class="labelPeso">Peso max. 250</label>
                         <input type="text" id="peso" placeholder="Digite aqui o peso" maxlength="4" inputmode="numeric" required 
-                        oninput="pesoOnInput(this.value)" 
+                        oninput="validaPeso(this.value)" 
                         onclick="limpaResultado();this.value = '';">
                     </td>
                     <td>
                         <label for="altura" class="labelAltura">Altura max. 2,99</label>
                         <input type="text" id="altura" placeholder="Digite aqui a altura" inputmode="numeric" maxlength="4" required 
-                            oninput="primeiroCaracter(this.value);" 
-                            onkeyup="filtraAlturaMaxima(this.value);"
+                            oninput="validaAltura(this.value);" 
+                            onkeyup="alturaMaxima(this.value);"
                             onclick="limpaResultado();this.value = '';" >
                     </td>
                 </tr>
@@ -193,14 +193,14 @@
                     <td>
                         <label for="nome">Nome</label>
                         <input type="text" id="nome" maxlength="50" placeholder="Digite aqui o nome" 
-                            oninput="formataNome(this.value)";
+                            oninput="formataNome(this.value)"
                             onclick="this.value = '';">
                             
                     </td>
                     <td>
                         <label for="peso">Idade max. 130</label>
                         <input type="text" id="idade" max="3" inputmode="numeric" maxlength="3" placeholder="Digite aqui a idade" 
-                        oninput="idadeOnInput(this.value)"  
+                        oninput="validaIdade(this.value)"  
                         onclick="this.value = '';" > 
                     </td>
                 </tr>
@@ -263,7 +263,7 @@
             </tr>
         </table>
     </div>
-    <div id="relatorio"class="tab">
+    <div id="historico"class="tab">
         <center><h1>Hist&oacuterico</h1></center>
         <div id="tabHistorico"></div>
         <table>
@@ -295,7 +295,7 @@
         /                                                                    /
         / campo peso, evento oninput, funcao que so aceita uma virgula no campo, 
         / limita o valor do campo peso, e nao permite comecar com espaco ou com zero */
-        function pesoOnInput(peso){
+        function validaPeso(peso){
             
             // pega o campo pelo id, sem o valor para usar embaixo
             let inputPeso = document.getElementById('peso');
@@ -333,14 +333,14 @@
         /                                                                    /
         / campo altura, evento onkeyup, funcao que impede inicia a           /
         / a altura com valor acima de 2  ************************************/
-        function filtraAlturaMaxima(alt){
+        function alturaMaxima(alt){
             if(alt.startsWith(3) || alt.startsWith(4) || alt.startsWith(5) || alt.startsWith(6) || alt.startsWith(7) || alt.startsWith(8) || alt.startsWith(9)){
                 document.getElementById("altura").value = ''; 
             }
         }
 
         // campo altura, evento oninput
-        function primeiroCaracter(altura){
+        function validaAltura(altura){
             let inputAltura = document.getElementById('altura');
 
            // filtra todos os caracteres, permitindo apenas numero no campo altura
@@ -396,7 +396,7 @@
         /                                                                    /
         /                                                                    /
         /*** campo idade, evento oninput ************************************/
-        function idadeOnInput(idade){
+        function validaIdade(idade){
 
              // so numeros no campo
              document.getElementById('idade').value = idade.replace(/[^0-9]/g,'').replace(/(\..*?)\..*/g,'$1');
@@ -565,8 +565,8 @@
         /*** funcao que mostra o historico *****************************************/ 
 
         function mostraHistorico(){
-        document.getElementById("container").style.display="none";
-        document.getElementById("relatorio").style.display="block";
+        document.getElementById("formulario").style.display="none";
+        document.getElementById("historico").style.display="block";
 
             // se houver informacao no local especifico do local storage, entra aqui
             if(localStorage.myHistory !==''){
@@ -631,24 +631,24 @@
         /*****   funcao do botao mostrar tabela  ***********************************/ 
          function mostrar(){
             document.getElementById("tabela").style.display="block";
-            document.getElementById("container").style.display="none"; 
+            document.getElementById("formulario").style.display="none"; 
         }
         // funcao do botao mostrar credito
         function tabCredito(){
             document.getElementById("tabCredito").style.display="block";
-            document.getElementById("container").style.display="none";
+            document.getElementById("formulario").style.display="none";
         }
         // funcao do botao mostrar historico
         function mostrarHistorico(){
-            document.getElementById("container").style.display="none";
-            document.getElementById("relatorio").style.display="block";
+            document.getElementById("formulario").style.display="none";
+            document.getElementById("historico").style.display="block";
         }
         // funcao do botao fechar
         function fechar(){
             document.getElementById("tabela").style.display="none";
             document.getElementById("tabCredito").style.display="none";
-            document.getElementById("relatorio").style.display="none";
-            document.getElementById("container").style.display="block";  
+            document.getElementById("historico").style.display="none";
+            document.getElementById("formulario").style.display="block";  
         }
 
         /************************************************************************** /
