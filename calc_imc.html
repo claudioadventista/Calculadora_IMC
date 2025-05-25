@@ -1,5 +1,5 @@
 
-<!DOCTYPE html>
+<!DOCTYPE html><!-- by claudioadventista@hotmail.com -->
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
@@ -195,7 +195,6 @@
                         <input type="text" id="nome" maxlength="50" placeholder="Digite aqui o nome" 
                             oninput="formataNome(this.value)"
                             onclick="this.value = '';">
-                            
                     </td>
                     <td>
                         <label for="peso">Idade max. 130</label>
@@ -293,7 +292,7 @@
         /     ********** INICIO DO PROCESSO DO CAMPO PESO *************      /
         /                                                                    /
         /                                                                    /
-        / campo peso, evento oninput, funcao que so aceita uma virgula no campo, 
+        /*** campo peso, evento oninput, funcao que so aceita uma virgula no campo, 
         / limita o valor do campo peso, e nao permite comecar com espaco ou com zero */
         function validaPeso(peso){
             
@@ -322,7 +321,6 @@
                     + v.substring(v.indexOf(',')+1).replace(/,/g,'');
                 }
             });
-
         }; // ************** FIM DO PROCESSO DO CAMPO PESO ****************
 
         /******************************************************************* /
@@ -331,7 +329,7 @@
         /     ********** INICIO DO PROCESSO DO CAMPO ALTURA *************    /
         /                                                                    /
         /                                                                    /
-        / campo altura, evento onkeyup, funcao que impede inicia a           /
+        /*** campo altura, evento onkeyup, funcao que impede inicia a        /
         / a altura com valor acima de 2  ************************************/
         function alturaMaxima(alt){
             if(alt.startsWith(3) || alt.startsWith(4) || alt.startsWith(5) || alt.startsWith(6) || alt.startsWith(7) || alt.startsWith(8) || alt.startsWith(9)){
@@ -370,7 +368,6 @@
         /                                                                    /
         /                                                                    /
         /*** campo idade, evento oninput ************************************/
-
         function formataNome(nome){ 
 
             // filtro que permite digitar apenas letras e espacos
@@ -385,8 +382,7 @@
             // impede iniciar com espacos
             if(nome.startsWith(' ')){
                 document.getElementById('nome').value = '';
-            };
-            
+            }; 
         } // ************** FIM DO PROCESSO DO CAMPO NOME ****************
 
         /******************************************************************* /
@@ -490,13 +486,12 @@
 
                         // salva tudo como uma unica informacao, substituindo as informacoes antigas no local especifico
                         localStorage.myHistory = JSON.stringify(arrayHistorico); 
-
                     }else{
                     // se o campo peso ou altura estiverem em branco   
-                        alert("Campo em vermelho em branco"); 
+                        alert("Campo em vermelho, em branco"); 
                     }
             }else{
-                alert("Campo em vermelho em branco");
+                alert("Campo em vermelho, em branco");
             }
         });// ************** FIM DO PROCESSO DO CALCULO DO IMC ****************
 
@@ -506,7 +501,7 @@
         /     ***** INICIO DO PROCESSO DE CLASSIFICACAO DO RESULTADO DO IMC *****   /
         /                                                                           /
         /                                                                           /                                                          
-        / funcao que classifica o estado de saude de acordo com o IMC encontrado   */
+        /*** funcao que classifica o estado de saude de acordo com o IMC encontrado */
         function classificarIMC(imc){
             if(imc < 16){
                 return "Magreza grau III";
@@ -533,7 +528,7 @@
         /    ************ INICIO DA FUNCAO DE LIMPAR A ACONSULTA ****************   /
         /                                                                           /
         /                                                                           /
-        /*****  funcao que limpa a consulta nos campos *****************************/ 
+        /*** funcao que limpa a consulta nos campos ********************************/ 
         function limpaConsulta(){
             if(confirm ("Deseja limpar tudo?")){
 
@@ -563,7 +558,6 @@
         /                                                                           /
         /                                                                           /
         /*** funcao que mostra o historico *****************************************/ 
-
         function mostraHistorico(){
         document.getElementById("formulario").style.display="none";
         document.getElementById("historico").style.display="block";
@@ -628,7 +622,7 @@
         /     ***************** INICIO DAS FUNCOES MENORES *********************    /
         /                                                                           /
         /                                                                           /
-        /*****   funcao do botao mostrar tabela  ***********************************/ 
+        /*** funcao do botao mostrar tabela  ***************************************/ 
          function mostrar(){
             document.getElementById("tabela").style.display="block";
             document.getElementById("formulario").style.display="none"; 
@@ -649,7 +643,7 @@
             document.getElementById("tabCredito").style.display="none";
             document.getElementById("historico").style.display="none";
             document.getElementById("formulario").style.display="block";  
-        }
+        }// ***** FIM DAS FUNCOES MENORES ************************************
 
         /************************************************************************** /
         /                                                                           /
@@ -657,7 +651,7 @@
         /     ******* INICIO DO PROCEDIMENTO PARA MOSTRAR A IMAGEM *************    /
         /                                                                           /
         /                                                                           /
-        /***************************************************************************/ 
+        /*** busca a imagem na internet ********************************************/ 
         let image = document.createElement('img');
         image.src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg";
         
