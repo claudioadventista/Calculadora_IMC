@@ -463,12 +463,10 @@
                         // mostra a div do resultado
                         document.getElementById("resultado").style.display="block";
 
-                      //  imc.replace(".",",");
-
                         // puxa a classificacao de acordo com o resultado do imc
                         const classificacao = classificarIMC(imc);
 
-                        // mostra o resultado na div
+                        // mostra o resultado na div com virgula ao inves de ponto
                         resultado.innerText = `IMC: ${imc.toFixed(2).replace(".",",")} - ${classificacao}`;
 
                         // busca encontrar o local expecifico onde vai salvar as informacoes
@@ -496,7 +494,6 @@
                     }else{
                     // se o campo peso ou altura estiverem em branco   
                         alert("Campo em vermelho em branco"); 
-                       // resultado.innerText = 'Preencha os campos em vermelho';
                     }
             }else{
                 alert("Campo em vermelho em branco");
@@ -533,14 +530,14 @@
         /************************************************************************** /
         /                                                                           /
         /                                                                           /
-        /     ************ INICIO DA FUNCAO DE LIMPARA ACONSULTA ****************   /
+        /    ************ INICIO DA FUNCAO DE LIMPAR A ACONSULTA ****************   /
         /                                                                           /
         /                                                                           /
         /*****  funcao que limpa a consulta nos campos *****************************/ 
         function limpaConsulta(){
             if(confirm ("Deseja limpar tudo?")){
 
-                // limpa todos os campos input
+                // seleciona todos os campos input
                 const inputs = document.querySelectorAll('input');
 
                 // faz uma varredura em todos os inputs
@@ -663,10 +660,12 @@
         /***************************************************************************/ 
         let image = document.createElement('img');
         image.src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg";
+        
         // mostra a div da imagem se estiver conectado a internet
         image.onload = function(){
             document.getElementById("imagem").style.display = "block";
         }
+        
         // esconde a div da imagem se não estiver conectado a internet
         image.onerror = function(){
             document.getElementById("imagem").style.display = "none";
