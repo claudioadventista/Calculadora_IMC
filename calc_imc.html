@@ -1,4 +1,3 @@
-
 <!DOCTYPE html><!-- by claudioadventista@hotmail.com -->
 <html lang="pt-br">
 <head>
@@ -186,6 +185,7 @@
                         <input type="text" id="altura" placeholder="Digite aqui a altura" inputmode="numeric" maxlength="4" required 
                             oninput="validaAltura(this.value);" 
                             onkeyup="alturaMaxima(this.value);"
+                            onkeydown="removeZero(this.value);"
                             onclick="limpaResultado();this.value = '';" >
                     </td>
                 </tr>
@@ -335,8 +335,31 @@
             if(alt.startsWith(3) || alt.startsWith(4) || alt.startsWith(5) || alt.startsWith(6) || alt.startsWith(7) || alt.startsWith(8) || alt.startsWith(9)){
                 document.getElementById("altura").value = ''; 
             }
-        }
 
+             // acrescenta uma virgula se digitar zero
+             if(alt.startsWith('0')){
+                document.getElementById("altura").value = '0,'+ alt.substr(2);
+            }
+        }
+      
+        // não permite digitar o zero logo apos '0,'
+        const zero = document.getElementById('altura');
+
+        // aciona a funcao pelo evento keydown do campo altura
+        zero.addEventListener('keydown',(e)=>{
+            const valor = zero.value;
+
+            // verifica se no evento, a tecla digitada foi igual a selecionada, que no caso é zero, 0
+            const ehZero = e.key === '0';
+
+            // compara, se o tamanho, ou a quantidade de caracteres no campo for igual a 2, e a tecla pressionada for igual a zero, 0...
+            if (valor.length === 2 && ehZero){
+
+                // inibe o valor da tecla digitada
+                e.preventDefault();
+            }
+        })
+           
         // campo altura, evento oninput
         function validaAltura(altura){
             let inputAltura = document.getElementById('altura');
@@ -401,7 +424,6 @@
             if(idade>130){
                 document.getElementById('idade').value = '';
             };
-            
             let input = document.getElementById('idade');
 
                 // limita a apenas uma virgula no campo
@@ -417,9 +439,27 @@
                  // acrescenta uma virgula se digitar zero
                 if(idade.startsWith('0')){
                     document.getElementById("idade").value = '0,'+ idade.substr(2);
-                }
-        } // ************** FIM DO PROCESSO DO CAMPO IDADE ****************
+                }    
+        } 
 
+         // não permite digitar o zero logo apos '0,'
+         const zeroIdade = document.getElementById('idade');
+
+        // aciona a funcao pelo evento keydown do campo altura
+        zeroIdade.addEventListener('keydown',(e)=>{
+            const valorIdade = zeroIdade.value;
+
+            // verifica se no evento, a tecla digitada foi igual a selecionada, que no caso é zero, 0
+            const ehZeroIdade = e.key === '0';
+
+            // compara, se o tamanho, ou a quantidade de caracteres no campo for igual a 2, e a tecla pressionada for igual a zero, 0...
+            if (valorIdade.length === 2 && ehZeroIdade){
+
+                // inibe o valor da tecla digitada
+                e.preventDefault();
+            }
+        });// ************** FIM DO PROCESSO DO CAMPO IDADE ****************
+        
         /******************************************************************* /
         /                                                                    /
         /                                                                    /
