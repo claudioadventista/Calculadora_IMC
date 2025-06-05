@@ -141,12 +141,12 @@
         .labelPeso, .labelAltura{
             color:#ad0303;
         }
-      .imagem{
+        .imagem{
             position:relative;
             float:left;
             margin-top:-60px; 
         }
-       img{
+        img{
             width:70px;
             height:50px;   
             background-color: #eee;
@@ -229,7 +229,7 @@
         <center><div id="resultado"></div></center>
     </div>
     <div id="tabela" class="tab">
-        <center><h1>Tabela de IMC</h1></center>
+        <center><h1>Tabela de IMC</h1></center>      
         <p class="tabelaIMC obesidadeGrauIII">Acima de 40 Obesidade grau III</p>
         <p class="tabelaIMC obesidadeGrauII">Entre 35 e 40 Obesidade grau II</p>
         <p class="tabelaIMC obesidadeGrauI">Entre 30 e 34,9 Obesidade grau I</p>
@@ -237,7 +237,7 @@
         <p class="tabelaIMC normal">Entre 18,5 e 24,9 Normal</p>
         <p class="tabelaIMC magrezaGrauI">Entre 17 e 18.4 Magreza grau I</p>
         <p class="tabelaIMC magrezaGrauII">Entre 16 e 16,9 Magreza grau II</p>
-        <p class="tabelaIMC magrezaGrauIII">Abaixo de 15,9 Magreza grau III</p
+        <p class="tabelaIMC magrezaGrauIII">Abaixo de 15,9 Magreza grau III</p>     
         <table>
             <tr>
                 <td></td>
@@ -272,7 +272,7 @@
         <table>
             <tr>
                 <td>
-                    <button class="botao novoCadastro" onclick="limparHistorico()" >Limpar </button>
+                    <button class="botao novoCadastro" onclick="limparHistorico()" >Limpar </button>                
                     <button class="botao botaoInferior" onclick="salvarDados()" >Salvar </button>
                 </td>
                 <td>
@@ -287,7 +287,7 @@
         function limpaResultado(){
             document.getElementById('resultado').innerText = '';
             document.getElementById('resultado').style.display='none';
-        }
+        }      
         /******************************************************************* /
         /                                                                    /
         /                                                                    /
@@ -305,8 +305,7 @@
                 document.getElementById("peso").value = '';
             };
             if(peso.substr(3,1) === ','){
-                inputPeso.maxLength = 5;
-               
+                inputPeso.maxLength = 5;    
             }else{
                 inputPeso.maxLength = 4;
             };
@@ -341,7 +340,7 @@
             if (valor.length === 2 && ehZero){
                 e.preventDefault();
             }
-        })
+        }) 
         function validaAltura(altura){// oninput
             altura = altura.replace(/[^0-9]/g,'').replace(/(\..*?)\..*/g,'$1');
             altura = altura.replace(/\B(?=(\d{1})+(?!\d))/g, ",");
@@ -382,7 +381,7 @@
             if(old.startsWith('0')){
                     document.getElementById("idade").value = '0,'+ old.substr(2);
             } 
-        }    
+        }       
         const zeroIdade = document.getElementById('idade');
         zeroIdade.addEventListener('keydown',(e)=>{  
             const valorIdade = zeroIdade.value;
@@ -410,7 +409,7 @@
                     + v.substring(v.indexOf(',')+1).replace(/,/g,'');
                 }
             });
-        }   
+        }        
         /******************************************************************* /
         /                                                                    /
         /                                                                    /
@@ -449,15 +448,15 @@
                 }  
             }
             // se houver valor nos campos peso e altura, entra aqui 
-            if(peso2.value !== '' && altura2.value !== ''){         
+            if(peso2.value !== '' && altura2.value !== ''){              
                 //  permite um valor flutuante no campo peso e troca a virgula pelo ponto
                 const peso = parseFloat(document.getElementById("peso").value.replace(",","."));             
                 //  permite um valor flutuante no campo altura e troca a virgula pelo ponto
-                const altura = parseFloat(document.getElementById("altura").value.replace(",","."));        
+                const altura = parseFloat(document.getElementById("altura").value.replace(",","."));                
                 // caucula o IMC 
-                const imc = peso / (altura * altura);
+                const imc = peso / (altura * altura);                
                 // se o campo peso e altura estiverem preenchidos, mostra o resultado, segunda validacao
-                if(peso2.value.length>=1 && altura2.value.length>=1){                 
+                if(peso2.value.length>=1 && altura2.value.length>=1){
                     // mostra a div do resultado
                     document.getElementById("resultado").style.display="block";
                     // puxa a classificacao de acordo com o resultado do imc
@@ -474,7 +473,7 @@
                     arrayHistorico.push('Nome : ' + nome);
                     arrayHistorico.push('Idade : ' + idade);
                     arrayHistorico.push('Peso : ' + peso.toFixed(1).replace(".",","));
-                    arrayHistorico.push('Altura : ' + altura.toFixed(2).replace(".",","));                 
+                    arrayHistorico.push('Altura : ' + altura.toFixed(2).replace(".",","));
                     // mostra apenas as duas casas decimais do resultado
                     arrayHistorico.push('IMC : ' + imc.toFixed(2).replace(".",","));
                     arrayHistorico.push(classificacao);
@@ -555,7 +554,7 @@
                 // se houver um local especifico no local storage, coleta as informacoes, segunda validacao
                 if(localStorage.myHistory){
                     // apaga as informacoes na div onde vai mostrar as informacoes atualizadas
-                    resultDIV.innerHTML = "";              
+                    resultDIV.innerHTML = "";    
                     // pega as informacoes do local storage e coloca no array
                     arrayHistorico = JSON.parse(localStorage.getItem('myHistory'));   
                     // com um loop for, cria uma lista e coloca na variavel que vai mostrar as informacoes na div 
@@ -626,11 +625,11 @@
         /                                                                           /
         /*** busca a imagem na internet ********************************************/ 
         let image = document.createElement('img');
-        image.src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg";    
+        image.src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg";
         // mostra a div da imagem se estiver conectado a internet
         image.onload = function(){
             document.getElementById("imagem").style.display = "block";
-        }     
+        }
         // esconde a div da imagem se nao estiver conectado a internet
         image.onerror = function(){
             document.getElementById("imagem").style.display = "none";
