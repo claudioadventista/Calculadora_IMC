@@ -108,7 +108,7 @@
             background-color: #d5dee6; 
             border:1px solid #7db2e0; 
             border-radius: 5px;
-            padding: 15px 0px 15px 0px;
+            padding: 15px;
             display: none;
         }
         h2, h1{
@@ -172,48 +172,46 @@
     <div id="formulario" class="tab">
         <center><h1>Calculadora de IMC</h1></center>
         <center><h2>Cl&aacuteudio Brito</h2></center>
-            <div id="imagem" style="display:none;" > 
-                <a href="https://youtu.be/mDaa9ty23e8" target="_blank"><img class="imagem" src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg" /></a>
-            </div>
-        <form>
-            <table>
-                <tr>
-                    <td>
-                        <label for="peso" class="labelPeso">Peso max. 250</label>
-                        <input type="text" id="peso" placeholder="Digite aqui o peso" maxlength="4" inputmode="numeric" required 
-                        oninput="validaPeso(this.value)" 
-                        onclick="limpaResultado();this.value = '';">
-                    </td>
-                    <td>
-                        <label for="altura" class="labelAltura">Altura max. 2,99</label>
-                        <input type="text" id="altura" placeholder="Digite aqui a altura" inputmode="numeric" maxlength="4" required 
-                            oninput="validaAltura(this.value);" 
-                            onkeyup="alturaMaxima(this.value);"
-                            onclick="limpaResultado();this.value = '';" >
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label for="nome">Nome</label>
-                        <input type="text" id="nome" maxlength="50" placeholder="Digite aqui o nome" 
-                            oninput="formataNome(this.value)"
-                            onclick="this.value = '';">
-                    </td>
-                    <td>
-                        <label for="idade">Idade max. 130</label>
-                        <input type="text" id="idade" max="3" inputmode="numeric" maxlength="3" placeholder="Digite aqui a idade" 
-                            oninput="validaIdade(this.value)"
-                            onkeyup="idadeMaxima(this.value)" 
-                            onclick="this.value = '';" > 
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <button id="calcular" class="botao" >Calcular IMC</button> 
-                    </td>
-                </tr>
-            </table>
-        </form>
+        <div id="imagem" style="display:none;" > 
+            <a href="https://youtu.be/mDaa9ty23e8" target="_blank"><img class="imagem" src="https://i.pinimg.com/564x/c9/ae/14/c9ae1482ccf3b4503d6c9fff41b999f1.jpg" /></a>
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <label for="peso" class="labelPeso">Peso max. 250</label>
+                    <input type="text" id="peso" placeholder="Digite aqui o peso" maxlength="4" inputmode="numeric" required 
+                    oninput="validaPeso(this.value)" 
+                    onclick="limpaResultado();this.value = '';">
+                </td>
+                <td>
+                    <label for="altura" class="labelAltura">Altura max. 2,99</label>
+                    <input type="text" id="altura" placeholder="Digite aqui a altura" inputmode="numeric" maxlength="4" required 
+                        oninput="validaAltura(this.value);" 
+                        onkeyup="alturaMaxima(this.value);"
+                        onclick="limpaResultado();this.value = '';" >
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" maxlength="50" placeholder="Digite aqui o nome" 
+                        oninput="formataNome(this.value)"
+                        onclick="this.value = '';">
+                </td>
+                <td>
+                    <label for="idade">Idade max. 130</label>
+                    <input type="text" id="idade" max="3" inputmode="numeric" maxlength="3" placeholder="Digite aqui a idade" 
+                        oninput="validaIdade(this.value)"
+                        onkeyup="idadeMaxima(this.value)" 
+                        onclick="this.value = '';" > 
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="calcular" class="botao" >Calcular IMC</button> 
+                </td>
+            </tr>
+        </table>
         <table>
             <tr>
                 <td>
@@ -226,7 +224,7 @@
                 </td>
             </tr>
         </table>
-        <center><div id="resultado"></div></center>
+        <div id="resultado"></div>
     </div>
     <div id="tabela" class="tab">
         <center><h1>Tabela de IMC</h1></center>      
@@ -448,13 +446,31 @@
                 }  
             }
             // se houver valor nos campos peso e altura, entra aqui 
-            if(peso2.value !== '' && altura2.value !== ''){              
+            if(peso2.value !== '' && altura2.value !== ''){             
                 //  permite um valor flutuante no campo peso e troca a virgula pelo ponto
                 const peso = parseFloat(document.getElementById("peso").value.replace(",","."));             
                 //  permite um valor flutuante no campo altura e troca a virgula pelo ponto
                 const altura = parseFloat(document.getElementById("altura").value.replace(",","."));                
                 // caucula o IMC 
-                const imc = peso / (altura * altura);                
+                const imc = peso / (altura * altura);  
+                // Função para calcular o peso ideal
+                function calcularPesoIdeal(altura) {
+                    const pesoIdealMinimo = 18.5 * (altura * altura);
+                    const pesoIdealMaximo = 24.9 * (altura * altura);
+                    return { pesoIdealMinimo, pesoIdealMaximo };
+                }
+                // Função para calcular a diferença de peso
+                function calcularDiferencaPeso(peso, pesoIdealMinimo, pesoIdealMaximo) {
+                    if (peso < pesoIdealMinimo) {
+                        return pesoIdealMinimo - peso;
+                    } else if (peso > pesoIdealMaximo) {
+                        return peso - pesoIdealMaximo;
+                    } else {
+                        return 0;
+                    }
+                }
+                const { pesoIdealMinimo, pesoIdealMaximo } = calcularPesoIdeal(altura);
+                const diferencaPeso = calcularDiferencaPeso(peso, pesoIdealMinimo, pesoIdealMaximo);
                 // se o campo peso e altura estiverem preenchidos, mostra o resultado, segunda validacao
                 if(peso2.value.length>=1 && altura2.value.length>=1){
                     // mostra a div do resultado
@@ -462,7 +478,18 @@
                     // puxa a classificacao de acordo com o resultado do imc
                     const classificacao = classificarIMC(imc);
                     // mostra o resultado na div com virgula ao inves de ponto
-                    resultado.innerText = `IMC: ${imc.toFixed(2).replace(".",",")} - ${classificacao}`;
+                    let mensagem;
+                    let resumoIMC;
+                    if (classificacao === 'normal') {
+                            mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.`;
+                    } else if(classificacao === 'com sobrepeso' || classificacao === 'com obesidade grau I' || classificacao === 'com obesidade grau II' || classificacao === 'com obesidade grau III'){
+                            mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Você precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
+                            resumoIMC = `Você precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
+                    }else{
+                        mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Você precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
+                        resumoIMC = `Você precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
+                    };
+                    resultado.innerText = mensagem;
                     // busca encontrar o local expecifico onde vai salvar as informacoes
                     if(localStorage.myHistory){
                         // caso o local exista, pega as informacoes contida e coloca no array que foi criado
@@ -470,13 +497,18 @@
                     };
                     // com as informacoes coletadas do local storage, agora acrescenta as informacoes dos campos no array
                     arrayHistorico.push('<center style="color:brown;background-color:white;padding:5px 5px 5px 5px; border-radius:5px;">--- NOVO HIST&OacuteRICO ---</center>');
-                    arrayHistorico.push('Nome : ' + nome);
-                    arrayHistorico.push('Idade : ' + idade);
+                    if(nome !== ''){
+                        arrayHistorico.push('Nome : ' + nome);
+                    }
+                    if(idade !== ''){
+                        arrayHistorico.push('Idade : ' + idade);
+                    }
                     arrayHistorico.push('Peso : ' + peso.toFixed(1).replace(".",","));
                     arrayHistorico.push('Altura : ' + altura.toFixed(2).replace(".",","));
                     // mostra apenas as duas casas decimais do resultado
                     arrayHistorico.push('IMC : ' + imc.toFixed(2).replace(".",","));
                     arrayHistorico.push(classificacao);
+                    arrayHistorico.push(resumoIMC);
                     arrayHistorico.push('Data : ' + dataAtual) ;
                     // salva tudo como uma unica informacao, substituindo as informacoes antigas no local especifico
                     localStorage.myHistory = JSON.stringify(arrayHistorico); 
@@ -497,21 +529,21 @@
         /*** funcao que classifica o estado de saude de acordo com o IMC encontrado */
         function classificarIMC(imc){
             if(imc < 16){
-                return "Magreza grau III";
+                return "com magreza grau III";
             }else if(imc >= 16 && imc < 17){
-                return "Magreza grau II";
+                return "com magreza grau II";
             }else if(imc >=17 && imc < 18.5){
-                return "Magreza grau I";
+                return "com magreza grau I";
             }else if(imc >= 18.5 && imc < 25){
-                return "Normal";
+                return "normal";
             }else if(imc >= 25 && imc < 30){
-                return "Sobrepeso";
+                return "com sobrepeso";
             }else if(imc >= 30 && imc < 35){
-                return "Obesidade Gral I";
+                return "com obesidade grau I";
             }else if(imc >= 35 && imc < 40){
-                return "Obesidade Gral II";
+                return "com obesidade grau II";
             }else{
-                return "Obesidade Gral III";
+                return "com obesidade grau III";
             } 
         }
         /************************************************************************** /
