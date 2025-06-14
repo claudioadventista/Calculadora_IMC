@@ -483,11 +483,11 @@
                     if (classificacao === 'normal') {
                             mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.`;
                     } else if(classificacao === 'com sobrepeso' || classificacao === 'com obesidade grau I' || classificacao === 'com obesidade grau II' || classificacao === 'com obesidade grau III'){
-                            mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Você precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
-                            resumoIMC = `Você precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
+                            mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
+                            resumoIMC = `Precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
                     }else{
-                        mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Você precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
-                        resumoIMC = `Você precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
+                        mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
+                        resumoIMC = `Precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
                     };
                     resultado.innerText = mensagem;
                     // busca encontrar o local expecifico onde vai salvar as informacoes
@@ -507,7 +507,7 @@
                     arrayHistorico.push('Altura : ' + altura.toFixed(2).replace(".",","));
                     // mostra apenas as duas casas decimais do resultado
                     arrayHistorico.push('IMC : ' + imc.toFixed(2).replace(".",","));
-                    arrayHistorico.push(classificacao);
+                    arrayHistorico.push('Est&aacute '+ classificacao);
                     arrayHistorico.push(resumoIMC);
                     arrayHistorico.push('Data : ' + dataAtual) ;
                     // salva tudo como uma unica informacao, substituindo as informacoes antigas no local especifico
