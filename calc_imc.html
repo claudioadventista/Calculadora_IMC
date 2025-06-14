@@ -104,7 +104,6 @@
         #resultado{
             margin-top: 10px;
             font-size: 18px;
-            font-weight: bold;
             background-color: #d5dee6; 
             border:1px solid #7db2e0; 
             border-radius: 5px;
@@ -480,14 +479,16 @@
                     // mostra o resultado na div com virgula ao inves de ponto
                     let mensagem;
                     let resumoIMC;
+                    let pesoIdeal = peso - diferencaPeso;
+                    mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n O peso ideal seria entre \n ${pesoIdealMinimo.toFixed(2).replace(".",",")} até ${pesoIdealMaximo.toFixed(2).replace(".",",")}`;  
                     if (classificacao === 'normal') {
                             mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.`;
                     } else if(classificacao === 'com sobrepeso' || classificacao === 'com obesidade grau I' || classificacao === 'com obesidade grau II' || classificacao === 'com obesidade grau III'){
-                            mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
-                            resumoIMC = `Precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
+                        mensagem =  mensagem + `\n Precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos, \n para atingir o peso máximo.`;
+                        resumoIMC = `Precisa perder ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
                     }else{
-                        mensagem =  `Seu IMC é ${imc.toFixed(2).replace(".",",")}.\n Está ${classificacao}.\n Precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos.`;
-                        resumoIMC = `Precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos`;
+                        mensagem =  mensagem + `\n Precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos, \n para atingir o peso mínimo.`;
+                        resumoIMC = `Precisa ganhar ${diferencaPeso.toFixed(2).replace(".",",")} kilos `;
                     };
                     resultado.innerText = mensagem;
                     // busca encontrar o local expecifico onde vai salvar as informacoes
@@ -496,7 +497,7 @@
                         arrayHistorico = JSON.parse(localStorage.getItem('myHistory'));
                     };
                     // com as informacoes coletadas do local storage, agora acrescenta as informacoes dos campos no array
-                    arrayHistorico.push('<center style="color:brown;background-color:white;padding:5px 5px 5px 5px; border-radius:5px;">--- NOVO HIST&OacuteRICO ---</center>');
+                    arrayHistorico.push('<center style="color:brown;background-color:white;padding:5px 5px 5px 5px; border-radius:5px;">--- NOVO HISTÓRICO ---</center>');
                     if(nome !== ''){
                         arrayHistorico.push('Nome : ' + nome);
                     }
@@ -507,7 +508,7 @@
                     arrayHistorico.push('Altura : ' + altura.toFixed(2).replace(".",","));
                     // mostra apenas as duas casas decimais do resultado
                     arrayHistorico.push('IMC : ' + imc.toFixed(2).replace(".",","));
-                    arrayHistorico.push('Est&aacute '+ classificacao);
+                    arrayHistorico.push('Está '+ classificacao);
                     arrayHistorico.push(resumoIMC);
                     arrayHistorico.push('Data : ' + dataAtual) ;
                     // salva tudo como uma unica informacao, substituindo as informacoes antigas no local especifico
